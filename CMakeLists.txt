@@ -1,8 +1,7 @@
 cmake_minimum_required(VERSION 3.15)
 
-if (NOT VCPKG_LIBRARY_LINKAGE)
-    set(VCPKG_LIBRARY_LINKAGE static)
-endif()
+set(VCPKG_LIBRARY_LINKAGE static FORCE)
+# can only build static library
 
 if(NOT VCPKG_MANIFEST_MODE)
   include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/ezvcpkg/ezvcpkg.cmake)
@@ -116,41 +115,6 @@ cmake_dependent_option(
     OFF
 )
 
-if(CESIUM_INSTALL_STATIC_LIBS OR CESIUM_INSTALL_HEADERS)
-    foreach(PACKAGE ${PACKAGES_PUBLIC})
-        string(REGEX REPLACE "\[.*\]" "" PACKAGE ${PACKAGE})
-        set(PACKAGE_DIR ${PACKAGE_BASE_DIR}/${PACKAGE}_${VCPKG_TRIPLET})
-        message(DEBUG "PACKAGE_DIR ${PACKAGE_DIR}")
-
-        if(CESIUM_INSTALL_HEADERS AND NOT PACKAGE IN_LIST CESIUM_EXCLUDE_INSTALL_HEADERS)
-            install(
-                DIRECTORY ${PACKAGE_DIR}/include/
-                TYPE INCLUDE
-            )
-        endif()
-
-        if (CESIUM_INSTALL_STATIC_LIBS AND NOT PACKAGE IN_LIST CESIUM_EXCLUDE_INSTALL_STATIC_LIBS AND EXISTS ${PACKAGE_DIR}/lib)
-            install(
-                DIRECTORY $<IF:$<CONFIG:Debug>,${PACKAGE_DIR}/debug/lib/,${PACKAGE_DIR}/lib/>
-                DESTINATION ${CMAKE_INSTALL_LIBDIR}
-            )
-        endif()
-    endforeach()
-endif()
-
-if(CESIUM_INSTALL_STATIC_LIBS)
-    foreach(PACKAGE ${PACKAGES_PRIVATE})
-        set(PACKAGE_DIR ${PACKAGE_BASE_DIR}/${PACKAGE}_${VCPKG_TRIPLET})
-        message(DEBUG "PACKAGE_DIR ${PACKAGE_DIR}")
-        if (NOT PACKAGE IN_LIST CESIUM_EXCLUDE_INSTALL_STATIC_LIBS AND EXISTS ${PACKAGE_DIR}/lib)
-            install(
-                DIRECTORY $<IF:$<CONFIG:Debug>,${PACKAGE_DIR}/debug/lib/,${PACKAGE_DIR}/lib/>
-                DESTINATION ${CMAKE_INSTALL_LIBDIR}
-            )
-        endif()
-    endforeach()
-endif()
-
 if(NOT DEFINED CMAKE_C_COMPILER_LAUNCHER AND NOT DEFINED CMAKE_CXX_COMPILER_LAUNCHER)
     find_program(CCACHE_FOUND ccache)
     find_program(SCCACHE_FOUND sccache)
@@ -205,7 +169,7 @@ if(CESIUM_ENABLE_CLANG_TIDY)
 endif()
 
 # Add Modules
-list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/extern/cmake-modules/")
+# list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/extern/cmake-modules/")
 if (CESIUM_COVERAGE_ENABLED AND NOT MSVC)
     include(CodeCoverage)
     append_coverage_compiler_flags()
@@ -217,11 +181,11 @@ if (CESIUM_COVERAGE_ENABLED AND NOT MSVC)
     )
 endif()
 
-if (NOT DEFINED GLOB_USE_CONFIGURE_DEPENDS)
-    set(GLOB_USE_CONFIGURE_DEPENDS OFF CACHE BOOL
-        "Controls if cesium-native targets should use configure_depends or not for globbing their sources"
-    )
-endif()
+# if (NOT DEFINED GLOB_USE_CONFIGURE_DEPENDS)
+#     set(GLOB_USE_CONFIGURE_DEPENDS OFF CACHE BOOL
+#         "Controls if cesium-native targets should use configure_depends or not for globbing their sources"
+#     )
+# endif()
 
 # On the CI builds, I have to do this explicitly for some reason or it fails to find the vcpkg packages.
 # The toolchain is supposed to manage this, but I haven't figured out why it isn't yet.
@@ -255,7 +219,7 @@ find_package(tinyxml2 CONFIG REQUIRED)
 find_package(unofficial-sqlite3 CONFIG REQUIRED)
 find_package(uriparser CONFIG REQUIRED char wchar_t)
 find_package(WebP CONFIG REQUIRED)
-
+find_package(zlib-ng CONFIG REQUIRED)
 
 # Private Library (s2geometry)
 add_subdirectory(extern EXCLUDE_FROM_ALL)
@@ -281,12 +245,67 @@ add_subdirectory(CesiumIonClient)
 add_subdirectory(CesiumQuantizedMeshTerrain)
 
 # Private Targets
-if (CESIUM_TESTS_ENABLED)
-    # enable_testing() MUST be called before add_subdirectory or no tests
-    # will be found by ctest
-    enable_testing()
-    add_subdirectory(CesiumNativeTests)
-endif()
+# if (CESIUM_TESTS_ENABLED)
+#     # enable_testing() MUST be called before add_subdirectory or no tests
+#     # will be found by ctest
+#     enable_testing()
+#     add_subdirectory(CesiumNativeTests)
+# endif()
 
 
-add_subdirectory(doc)
+# add_subdirectory(doc)
+
+# install the export target
+include(CMakePackageConfigHelpers)
+
+set(INCLUDE_INSTALL_DIR "${CMAKE_INSTALL_PREFIX}/include")
+set(LIB_INSTALL_DIR "${CMAKE_INSTALL_PREFIX}/lib")
+
+# Export the targets to a script, the project is cesium-native
+install(EXPORT cesium-native-targets
+    FILE cesium-native-targets.cmake
+    NAMESPACE cesium-native::
+    DESTINATION share/cesium-native
+)
+
+# Create a ConfigVersion.cmake file
+write_basic_package_version_file(
+    "${CMAKE_CURRENT_BINARY_DIR}/cesium-native-config-version.cmake"
+    VERSION ${PROJECT_VERSION}
+    COMPATIBILITY AnyNewerVersion
+)
+
+# Create a Config.cmake file
+set(CESIUM_TARGETS
+    CesiumUtility
+    CesiumGltf
+    CesiumGeometry
+    CesiumGeospatial
+    CesiumJsonReader
+    CesiumJsonWriter
+    CesiumGltfContent
+    CesiumGltfReader
+    CesiumGltfWriter
+    CesiumAsync
+    Cesium3DTiles
+    Cesium3DTilesReader
+    Cesium3DTilesWriter
+    Cesium3DTilesContent
+    CesiumRasterOverlays
+    Cesium3DTilesSelection
+    CesiumIonClient
+    CesiumQuantizedMeshTerrain
+)
+configure_package_config_file(
+    "${CMAKE_CURRENT_SOURCE_DIR}/cmake/config.cmake.in"
+    "${CMAKE_CURRENT_BINARY_DIR}/cesium-native-config.cmake"
+    INSTALL_DESTINATION share/cesium-native
+)
+install(FILES 
+    "${CMAKE_CURRENT_BINARY_DIR}/cesium-native-config-version.cmake"    
+    "${CMAKE_CURRENT_BINARY_DIR}/cesium-native-config.cmake"
+    ${CMAKE_CURRENT_LIST_DIR}/cmake/Findpicosha2.cmake
+    ${CMAKE_CURRENT_LIST_DIR}/cmake/Findmodp_b64.cmake
+    ${CMAKE_CURRENT_LIST_DIR}/cmake/Findearcut.cmake
+    DESTINATION share/cesium-native
+)

@@ -18,21 +18,10 @@ function(cesium_target_include_directories)
     # If cesium-native has been included by another CMake project, we want our headers to be marked `SYSTEM` 
     # so they're not causing a bunch of warnings in another project that may have stricter warnings than we do. 
     # But if we're *not* included in another CMake project, we *want* those warnings, so we need to remove `SYSTEM`.
-    if(PROJECT_IS_TOP_LEVEL)
-        target_include_directories(
-            ${_TARGET}
-            PUBLIC
-                ${_PUBLIC}
-            PRIVATE
-                ${_PRIVATE}
-        )
-    else()
-        target_include_directories(
-            ${_TARGET}
-            SYSTEM PUBLIC
-                ${_PUBLIC}
-            PRIVATE
-                ${_PRIVATE}
-        )
-    endif()
+    target_include_directories(${_TARGET}
+        PUBLIC 
+        $<BUILD_INTERFACE:${_PUBLIC}>
+        PRIVATE
+        $<BUILD_INTERFACE:${_PRIVATE}>
+    )    
 endfunction()

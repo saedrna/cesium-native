@@ -1,4 +1,4 @@
-add_library(CesiumUtility "")
+add_library(CesiumUtility STATIC "")
 
 configure_cesium_library(CesiumUtility)
 
@@ -25,25 +25,25 @@ target_sources(
     PRIVATE
         ${CESIUM_UTILITY_SOURCES}
         ${CESIUM_UTILITY_HEADERS}
-    PUBLIC
-        ${CESIUM_UTILITY_PUBLIC_HEADERS}
+    # PUBLIC
+    #     ${CESIUM_UTILITY_PUBLIC_HEADERS}
 )
 
-cesium_target_include_directories(
-    TARGET
-        CesiumUtility
-    PUBLIC
-        ${CMAKE_CURRENT_LIST_DIR}/include
-    PRIVATE
-        ${CMAKE_CURRENT_LIST_DIR}/src
-        ${CMAKE_CURRENT_BINARY_DIR}/../extern/zlib
-        ${CMAKE_CURRENT_BINARY_DIR}/../extern/zlib-src
-)
+# cesium_target_include_directories(
+#     TARGET
+#         CesiumUtility
+#     PUBLIC
+#         ${CMAKE_CURRENT_LIST_DIR}/include
+#     PRIVATE
+#         ${CMAKE_CURRENT_LIST_DIR}/src
+#         ${CMAKE_CURRENT_BINARY_DIR}/../extern/zlib
+#         ${CMAKE_CURRENT_BINARY_DIR}/../extern/zlib-src
+# )
 
 target_link_libraries(
     CesiumUtility
     PUBLIC
-        zlib-ng::zlib-ng
+        zlib-ng::zlib
         spdlog::spdlog
         glm::glm
         uriparser::uriparser

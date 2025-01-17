@@ -1,6 +1,6 @@
 function(configure_cesium_library targetName)
     if (MSVC)
-        target_compile_options(${targetName} PRIVATE /W4 /WX /wd4201 /bigobj /w45038 /w44254 /w44242 /w44191 /w45220)
+        target_compile_options(${targetName} PRIVATE /W4 /WX /wd4201 /bigobj /w45038 /w44254 /w44242 /w44191 /w45220 /MP)
     else()
         target_compile_options(${targetName} PRIVATE -Werror -Wall -Wextra -Wconversion -Wpedantic -Wshadow -Wsign-conversion)
     endif()
@@ -10,6 +10,9 @@ function(configure_cesium_library targetName)
         CXX_STANDARD_REQUIRED YES
         CXX_EXTENSIONS NO
     )
+
+    # Set target folder for IDEs
+    set_target_properties(${targetName} PROPERTIES FOLDER "Cesium")
 
     if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND CMAKE_CXX_COMPILER_VERSION VERSION_GREATER_EQUAL 13)
         # Disable dangling-reference warning due to amount of false positives: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=109642
@@ -26,14 +29,6 @@ function(configure_cesium_library targetName)
         )
     endif()
 
-    if (BUILD_SHARED_LIBS)
-        target_compile_definitions(
-            ${targetName}
-            PUBLIC
-                CESIUM_SHARED=${BUILD_SHARED_LIBS}
-        )
-    endif()
-
     if (NOT ${targetName} MATCHES "cesium-native-tests")
         string(TOUPPER ${targetName} capitalizedTargetName)
         target_compile_definitions(
@@ -43,28 +38,38 @@ function(configure_cesium_library targetName)
         )
 
         if(CESIUM_INSTALL_HEADERS)
-            install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include
-                DESTINATION ${CMAKE_INSTALL_PREFIX}
+            install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include/
+                DESTINATION include/cesium-native
             )
-            install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/generated/include
-                DESTINATION ${CMAKE_INSTALL_PREFIX}
+            install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/generated/include/
+                DESTINATION include/cesium-native
                 OPTIONAL
             )
         endif()
 
         if(CESIUM_INSTALL_STATIC_LIBS)
-            install(TARGETS ${targetName}
-                CONFIGURATIONS Release RelWithDebInfo
-                LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/lib
+            message(STATUS "Installing static libraries: ${targetName}")
+            # target include for installed target
+            target_include_directories(${targetName} 
+            PUBLIC
+                $<INSTALL_INTERFACE:include/cesium-native>
+                $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+                $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/generated/include>
+            PRIVATE
+                $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>
+                $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/generated/src>
             )
             install(TARGETS ${targetName}
-                CONFIGURATIONS Debug
-                LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/debug/lib
+                EXPORT cesium-native-targets
+                CONFIGURATIONS Release RelWithDebInfo Debug
+                LIBRARY DESTINATION lib
+                ARCHIVE DESTINATION lib
+                RUNTIME DESTINATION bin
             )
         endif()
     endif()
 
-    if (CESIUM_EXTRA_INCLUDES)
-      target_include_directories(${targetName} PRIVATE ${CESIUM_EXTRA_INCLUDES})
-    endif()
+    # if (CESIUM_EXTRA_INCLUDES)
+    #   target_include_directories(${targetName} PRIVATE ${CESIUM_EXTRA_INCLUDES})
+    # endif()
 endfunction()

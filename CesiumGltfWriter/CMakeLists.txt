@@ -1,4 +1,4 @@
-add_library(CesiumGltfWriter "")
+add_library(CesiumGltfWriter STATIC "")
 configure_cesium_library(CesiumGltfWriter)
 
 cesium_glob_files(CESIUM_GLTF_WRITER_SOURCES
@@ -36,20 +36,20 @@ target_sources(
     PRIVATE
         ${CESIUM_GLTF_WRITER_SOURCES}
         ${CESIUM_GLTF_WRITER_HEADERS}
-    PUBLIC
-        ${CESIUM_GLTF_WRITER_PUBLIC_HEADERS}
+    # PUBLIC
+    #     ${CESIUM_GLTF_WRITER_PUBLIC_HEADERS}
 )
 
-cesium_target_include_directories(
-    TARGET
-        CesiumGltfWriter
-    PUBLIC
-        ${CMAKE_CURRENT_LIST_DIR}/include
-        ${CMAKE_CURRENT_LIST_DIR}/generated/include
-    PRIVATE
-        ${CMAKE_CURRENT_LIST_DIR}/src
-        ${CMAKE_CURRENT_LIST_DIR}/generated/src
-)
+# cesium_target_include_directories(
+#     TARGET
+#         CesiumGltfWriter
+#     PUBLIC
+#         ${CMAKE_CURRENT_LIST_DIR}/include
+#         ${CMAKE_CURRENT_LIST_DIR}/generated/include
+#     PRIVATE
+#         ${CMAKE_CURRENT_LIST_DIR}/src
+#         ${CMAKE_CURRENT_LIST_DIR}/generated/src
+# )
 
 target_link_libraries(CesiumGltfWriter
     PUBLIC

@@ -1,4 +1,4 @@
-add_library(Cesium3DTiles "")
+add_library(Cesium3DTiles STATIC "")
 configure_cesium_library(Cesium3DTiles)
 
 cesium_glob_files(CESIUM_3DTILES_SOURCES
@@ -36,20 +36,20 @@ target_sources(
     PRIVATE
         ${CESIUM_3DTILES_SOURCES}
         ${CESIUM_3DTILES_HEADERS}
-    PUBLIC
-        ${CESIUM_3DTILES_PUBLIC_HEADERS}
+    # PUBLIC
+    #     ${CESIUM_3DTILES_PUBLIC_HEADERS}
 )
 
-cesium_target_include_directories(
-    TARGET
-        Cesium3DTiles
-    PUBLIC
-        ${CMAKE_CURRENT_LIST_DIR}/include
-        ${CMAKE_CURRENT_LIST_DIR}/generated/include
-    PRIVATE
-        ${CMAKE_CURRENT_LIST_DIR}/src
-        ${CMAKE_CURRENT_LIST_DIR}/generated/src
-)
+# cesium_target_include_directories(
+#     TARGET
+#         Cesium3DTiles
+#     PUBLIC
+#         ${CMAKE_CURRENT_LIST_DIR}/include
+#         ${CMAKE_CURRENT_LIST_DIR}/generated/include
+#     PRIVATE
+#         ${CMAKE_CURRENT_LIST_DIR}/src
+#         ${CMAKE_CURRENT_LIST_DIR}/generated/src
+# )
 
 target_link_libraries(Cesium3DTiles
     PUBLIC

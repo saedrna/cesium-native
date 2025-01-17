@@ -1,4 +1,4 @@
-add_library(CesiumGltfReader "")
+add_library(CesiumGltfReader STATIC "")
 configure_cesium_library(CesiumGltfReader)
 
 cesium_glob_files(CESIUM_GLTF_READER_SOURCES
@@ -37,20 +37,20 @@ target_sources(
     PRIVATE
         ${CESIUM_GLTF_READER_SOURCES}
         ${CESIUM_GLTF_READER_HEADERS}
-    PUBLIC
-        ${CESIUM_GLTF_READER_PUBLIC_HEADERS}
+    # PUBLIC
+    #     ${CESIUM_GLTF_READER_PUBLIC_HEADERS}
 )
 
-cesium_target_include_directories(
-    TARGET
-        CesiumGltfReader
-    PUBLIC
-        ${CMAKE_CURRENT_LIST_DIR}/include
-        ${CMAKE_CURRENT_LIST_DIR}/generated/include
-    PRIVATE
-        ${CMAKE_CURRENT_LIST_DIR}/src
-        ${CMAKE_CURRENT_LIST_DIR}/generated/src
-)
+# cesium_target_include_directories(
+#     TARGET
+#         CesiumGltfReader
+#     PUBLIC
+#         ${CMAKE_CURRENT_LIST_DIR}/include
+#         ${CMAKE_CURRENT_LIST_DIR}/generated/include
+#     PRIVATE
+#         ${CMAKE_CURRENT_LIST_DIR}/src
+#         ${CMAKE_CURRENT_LIST_DIR}/generated/src
+# )
 
 target_link_libraries(CesiumGltfReader
     PUBLIC

@@ -1,4 +1,4 @@
-add_library(CesiumRasterOverlays "")
+add_library(CesiumRasterOverlays STATIC "")
 
 configure_cesium_library(CesiumRasterOverlays)
 
@@ -25,18 +25,18 @@ target_sources(
     PRIVATE
         ${CESIUM_RASTER_OVERLAYS_SOURCES}
         ${CESIUM_RASTER_OVERLAYS_HEADERS}
-    PUBLIC
-        ${CESIUM_RASTER_OVERLAYS_PUBLIC_HEADERS}
+    # PUBLIC
+    #     ${CESIUM_RASTER_OVERLAYS_PUBLIC_HEADERS}
 )
 
-cesium_target_include_directories(
-    TARGET
-        CesiumRasterOverlays
-    PUBLIC
-        ${CMAKE_CURRENT_LIST_DIR}/include
-    PRIVATE
-        ${CMAKE_CURRENT_LIST_DIR}/src
-)
+# cesium_target_include_directories(
+#     TARGET
+#         CesiumRasterOverlays
+#     PUBLIC
+#         ${CMAKE_CURRENT_LIST_DIR}/include
+#     PRIVATE
+#         ${CMAKE_CURRENT_LIST_DIR}/src
+# )
 
 target_link_libraries(CesiumRasterOverlays
     PUBLIC

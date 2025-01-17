@@ -1,4 +1,4 @@
-add_library(CesiumGltfContent "")
+add_library(CesiumGltfContent STATIC "")
 configure_cesium_library(CesiumGltfContent)
 
 cesium_glob_files(CESIUM_GLTF_CONTENT_SOURCES
@@ -37,20 +37,20 @@ target_sources(
     PRIVATE
         ${CESIUM_GLTF_CONTENT_SOURCES}
         ${CESIUM_GLTF_CONTENT_HEADERS}
-    PUBLIC
-        ${CESIUM_GLTF_CONTENT_PUBLIC_HEADERS}
+    # PUBLIC
+    #     ${CESIUM_GLTF_CONTENT_PUBLIC_HEADERS}
 )
 
-cesium_target_include_directories(
-    TARGET
-        CesiumGltfContent
-    PUBLIC
-        ${CMAKE_CURRENT_LIST_DIR}/include
-        ${CMAKE_CURRENT_LIST_DIR}/generated/include
-    PRIVATE
-        ${CMAKE_CURRENT_LIST_DIR}/src
-        ${CMAKE_CURRENT_LIST_DIR}/generated/src
-)
+# cesium_target_include_directories(
+#     TARGET
+#         CesiumGltfContent
+#     PUBLIC
+#         ${CMAKE_CURRENT_LIST_DIR}/include
+#         ${CMAKE_CURRENT_LIST_DIR}/generated/include
+#     PRIVATE
+#         ${CMAKE_CURRENT_LIST_DIR}/src
+#         ${CMAKE_CURRENT_LIST_DIR}/generated/src
+# )
 
 target_link_libraries(CesiumGltfContent
     PUBLIC

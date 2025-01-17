@@ -1,4 +1,4 @@
-add_library(CesiumQuantizedMeshTerrain "")
+add_library(CesiumQuantizedMeshTerrain STATIC "")
 configure_cesium_library(CesiumQuantizedMeshTerrain)
 
 cesium_glob_files(CESIUM_QUANTIZED_MESH_TERRAIN_SOURCES
@@ -36,20 +36,20 @@ target_sources(
     PRIVATE
         ${CESIUM_QUANTIZED_MESH_TERRAIN_SOURCES}
         ${CESIUM_QUANTIZED_MESH_TERRAIN_HEADERS}
-    PUBLIC
-        ${CESIUM_QUANTIZED_MESH_TERRAIN_PUBLIC_HEADERS}
+    # PUBLIC
+    #     ${CESIUM_QUANTIZED_MESH_TERRAIN_PUBLIC_HEADERS}
 )
 
-target_include_directories(
-    CesiumQuantizedMeshTerrain
-    PUBLIC
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/include>
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/generated/include>
-        $<INSTALL_INTERFACE:include>
-    PRIVATE
-        ${CMAKE_CURRENT_LIST_DIR}/src
-        ${CMAKE_CURRENT_LIST_DIR}/generated/src
-)
+# cesium_target_include_directories(
+#     TARGET    
+#         CesiumQuantizedMeshTerrain
+#     PUBLIC
+#         ${CMAKE_CURRENT_LIST_DIR}/include
+#         ${CMAKE_CURRENT_LIST_DIR}/generated/include
+#     PRIVATE
+#         ${CMAKE_CURRENT_LIST_DIR}/src
+#         ${CMAKE_CURRENT_LIST_DIR}/generated/src
+# )
 
 target_link_libraries(CesiumQuantizedMeshTerrain
     PUBLIC

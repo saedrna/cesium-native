@@ -1,0 +1,34 @@
+{
+  "dependencies": [
+    "abseil",
+    "asyncplusplus",
+    "catch2",
+    {
+      "name": "cpp-httplib",
+      "default-features": false
+    },
+    "draco",
+    "earcut-hpp",
+    "expected-lite",
+    "fmt",
+    "glm",
+    "ktx",
+    "libjpeg-turbo",
+    "libmorton",
+    "libwebp",
+    "meshoptimizer",
+    "modp-base64",
+    "openssl",
+    "picosha2",
+    "rapidjson",
+    "s2geometry",
+    "spdlog",
+    "sqlite3",
+    "stb",
+    "tinyxml2",
+    "uriparser",
+    "zlib-ng",
+    "zstd",
+    "zlib"
+  ]
+}

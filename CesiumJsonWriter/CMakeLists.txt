@@ -1,4 +1,4 @@
-add_library(CesiumJsonWriter "")
+add_library(CesiumJsonWriter STATIC "")
 configure_cesium_library(CesiumJsonWriter)
 
 cesium_glob_files(CESIUM_JSON_WRITER_SOURCES
@@ -33,18 +33,18 @@ target_sources(
     PRIVATE
         ${CESIUM_JSON_WRITER_SOURCES}
         ${CESIUM_JSON_WRITER_HEADERS}
-    PUBLIC
-        ${CESIUM_JSON_WRITER_PUBLIC_HEADERS}
+    # PUBLIC
+    #     ${CESIUM_JSON_WRITER_PUBLIC_HEADERS}
 )
 
-cesium_target_include_directories(
-    TARGET
-        CesiumJsonWriter
-    PUBLIC
-        ${CMAKE_CURRENT_LIST_DIR}/include
-    PRIVATE
-        ${CMAKE_CURRENT_LIST_DIR}/src
-)
+# cesium_target_include_directories(
+#     TARGET
+#         CesiumJsonWriter
+#     PUBLIC
+#         ${CMAKE_CURRENT_LIST_DIR}/include
+#     PRIVATE
+#         ${CMAKE_CURRENT_LIST_DIR}/src
+# )
 
 target_link_libraries(CesiumJsonWriter
     PUBLIC

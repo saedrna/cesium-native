@@ -1,4 +1,4 @@
-add_library(CesiumIonClient "")
+add_library(CesiumIonClient STATIC "")
 
 configure_cesium_library(CesiumIonClient)
 
@@ -25,16 +25,16 @@ target_sources(
     PRIVATE
         ${CESIUM_ION_CLIENT_SOURCES}
         ${CESIUM_ION_CLIENT_HEADERS}
-    PUBLIC
-        ${CESIUM_ION_CLIENT_PUBLIC_HEADERS}
+    # PUBLIC
+    #     ${CESIUM_ION_CLIENT_PUBLIC_HEADERS}
 )
 
-cesium_target_include_directories(
-    TARGET
-        CesiumIonClient
-    PUBLIC
-        ${CMAKE_CURRENT_LIST_DIR}/include
-)
+# cesium_target_include_directories(
+#     TARGET
+#         CesiumIonClient
+#     PUBLIC
+#         ${CMAKE_CURRENT_LIST_DIR}/include
+# )
 
 target_link_libraries(CesiumIonClient
     PUBLIC

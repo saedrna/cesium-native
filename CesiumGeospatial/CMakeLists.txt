@@ -1,4 +1,4 @@
-add_library(CesiumGeospatial "")
+add_library(CesiumGeospatial STATIC "")
 
 configure_cesium_library(CesiumGeospatial)
 
@@ -25,16 +25,16 @@ target_sources(
     PRIVATE
         ${CESIUM_GEOSPATIAL_SOURCES}
         ${CESIUM_GEOSPATIAL_HEADERS}
-    PUBLIC
-        ${CESIUM_GEOSPATIAL_PUBLIC_HEADERS}
+    # PUBLIC
+    #     ${CESIUM_GEOSPATIAL_PUBLIC_HEADERS}
 )
 
-cesium_target_include_directories(
-    TARGET
-        CesiumGeospatial
-    PUBLIC
-        ${CMAKE_CURRENT_LIST_DIR}/include
-)
+# cesium_target_include_directories(
+#     TARGET
+#         CesiumGeospatial
+#     PUBLIC
+#         ${CMAKE_CURRENT_LIST_DIR}/include
+# )
 
 target_link_libraries(CesiumGeospatial
 PUBLIC

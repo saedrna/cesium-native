@@ -1,0 +1,11 @@
+# mapbox/earcut.hpp
+find_path(earcut_INCLUDE_DIR mapbox/earcut.hpp)
+if(earcut_INCLUDE_DIR)
+  set(earcut_FOUND TRUE)
+  message(STATUS "Found earcut: ${earcut_INCLUDE_DIR}")
+  add_library(earcut INTERFACE IMPORTED GLOBAL)
+  target_include_directories(earcut INTERFACE ${earcut_INCLUDE_DIR})
+else()
+  set(earcut_FOUND FALSE)
+  message(STATUS "Could not find earcut")
+endif()

@@ -1,4 +1,4 @@
-add_library(CesiumAsync "")
+add_library(CesiumAsync STATIC "")
 
 configure_cesium_library(CesiumAsync)
 
@@ -24,18 +24,18 @@ target_sources(
     PRIVATE
         ${CESIUM_ASYNC_SOURCES}
         ${CESIUM_ASYNC_HEADERS}
-    PUBLIC
-        ${CESIUM_ASYNC_PUBLIC_HEADERS}
+    # PUBLIC
+    #     ${CESIUM_ASYNC_PUBLIC_HEADERS}
 )
 
-cesium_target_include_directories(
-    TARGET 
-        CesiumAsync
-    PUBLIC
-        ${CMAKE_CURRENT_LIST_DIR}/include
-    PRIVATE
-        ${CMAKE_CURRENT_LIST_DIR}/src/
-)
+# cesium_target_include_directories(
+#     TARGET 
+#         CesiumAsync
+#     PUBLIC
+#         ${CMAKE_CURRENT_LIST_DIR}/include
+#     PRIVATE
+#         ${CMAKE_CURRENT_LIST_DIR}/src/
+# )
 
 target_link_libraries(CesiumAsync
     PUBLIC

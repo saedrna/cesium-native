@@ -1,4 +1,4 @@
-add_library(CesiumJsonReader "")
+add_library(CesiumJsonReader STATIC "")
 configure_cesium_library(CesiumJsonReader)
 
 cesium_glob_files(CESIUM_JSON_READER_SOURCES src/*.cpp)
@@ -24,19 +24,18 @@ target_sources(
     PRIVATE
         ${CESIUM_JSON_READER_SOURCES}
         ${CESIUM_JSON_READER_HEADERS}
-    PUBLIC
-        ${CESIUM_JSON_READER_PUBLIC_HEADERS}
+    # PUBLIC
+    #     ${CESIUM_JSON_READER_PUBLIC_HEADERS}
 )
 
-cesium_target_include_directories(
-    TARGET
-        CesiumJsonReader
-    PUBLIC
-        ${CMAKE_BINARY_DIR}
-        ${CMAKE_CURRENT_LIST_DIR}/include
-    PRIVATE
-        ${CMAKE_CURRENT_LIST_DIR}/src
-)
+# cesium_target_include_directories(
+#     TARGET
+#         CesiumJsonReader
+#     PUBLIC
+#         ${CMAKE_CURRENT_LIST_DIR}/include
+#     PRIVATE
+#         ${CMAKE_CURRENT_LIST_DIR}/src
+# )
 
 target_link_libraries(CesiumJsonReader
     PUBLIC
